@@ -10,7 +10,13 @@
 ## large sets of data.                                                        ##
 ##                                                                            ##
 ## In particular, this script caches the inverse of a given matrix within the ##
-## enclosed environment.                                                      ##
+## enclosed environment using the makeCacheMatrix, and cacheSolve functions.  ##
+##                                                                            ##
+## Functions:                                                                 ##
+##      makeCacheMatrix: Creates a special matrix that can store the inverse  ##
+##      of a given matrix in a cached environment.                            ##
+##      cacheSolve: Retrieves the bound inverse matrix from cache, or stores  ##
+##      an unbound inverse matrix in the enclosed environment.                ##
 ##                                                                            ##
 ## NOTE:                                                                      ##
 ##      "The [operator] <<- ... [causes] a search to be made through parent   ##
