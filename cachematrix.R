@@ -15,6 +15,7 @@
 ## Functions:                                                                 ##
 ##      makeCacheMatrix: Creates a special matrix that can store the inverse  ##
 ##      of a given matrix in a cached environment.                            ##
+##                                                                            ##
 ##      cacheSolve: Retrieves the bound inverse matrix from cache, or stores  ##
 ##      an unbound inverse matrix in the enclosed environment.                ##
 ##                                                                            ##
@@ -85,27 +86,27 @@ cacheSolve <- function(x, ...) {
     ## Returns: 
     ##      A matrix indicating the inverse of matrix 'x'.
     
-    ## extract the function list from the matrix 'x'
-    func.list <- x[, 1]
+    ## Extract functions from the special matrix 'x' makeCacheMatrix returned
+    special.list <- x[, 1]
     
-    ## Get inverse matrix from cache.  If inverse matrix is not bound, m is NULL
-    m <- func.list$getinverse()
+    ## Get the inverse matrix from cache.  If matrix is unbound, m is NULL
+    m <- special.list$getinverse()
     
-    ## If matrix 'x' is found in enclosed environment, return its inverse matrix
+    ## If 'm' is bound in the cached environment, return the matrix from cache
     if(!is.null(m)) {
         message("getting cached data")
         return(m)
     }
     
-    ## Otherwise, get the values of the matrix passed to makeCacheMatrix
-    data <- func.list$get()
+    ## Otherwise, 'm' is unbound. Retrieve the original matrix data using 'get'
+    data <- special.list$get()
     
     ## Calculate the inverse
     m <- solve(data, ...)
     
-    ## Store the inverse for matrix 'm' in cached environment.
-    func.list$setinverse(m)
+    ## Bind the newly calculated matrix 'm' to the cached environment
+    special.list$setinverse(m)
     
-    ## Return the inverse matrix 'm'
+    ## Return the matrix 'm'
     m
 }
