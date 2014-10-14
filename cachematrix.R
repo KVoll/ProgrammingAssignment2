@@ -1,10 +1,10 @@
 ################################################################################
-## Author: Kristi Voll                                                        ##
+## Author: KVoll                                                              ##
 ## Date: Oct. 13, 2014                                                        ##
 ## Coursera CourseID: rprog-008 (R Programming) - Assignment 2                ##
 ##                                                                            ##
 ## The purpose of this script is to take advantage of the scoping rules in R, ##
-## namely demonstrating how the <<- operator to binds a special object to the ##
+## namely demonstrating how the <<- operator binds a special object to the ##
 ## enclosed environment (or cached environment).  One advantage to doing this ##
 ## is to speed up computing time while performing intensive operations on     ##
 ## large sets of data.                                                        ##
@@ -17,7 +17,7 @@
 ##      of a given matrix in a cached environment.                            ##
 ##                                                                            ##
 ##      cacheSolve: Retrieves the bound inverse matrix from cache, or stores  ##
-##      an unbound inverse matrix in the enclosed environment.                ##
+##      an unbound inverse matrix in the cached environment.                  ##
 ##                                                                            ##
 ## NOTE:                                                                      ##
 ##      "The [operator] <<- ... [causes] a search to be made through parent   ##
@@ -37,7 +37,7 @@
 ##      get: retrieve the values of the matrix 'x'.
 ##      setinverse: stores the values of the matrix 'm' (inverse of 'x') in the 
 ##                  enclosed environment using the <<- operator.
-##      getinverse: retrieve the matrix 'm' (inverse of 'x').
+##      getinverse: retrieve the matrix 'm' (inverse matrix of 'x').
 
 makeCacheMatrix <- function(x = matrix()) {
     ## Args:
@@ -45,11 +45,11 @@ makeCacheMatrix <- function(x = matrix()) {
     ##
     ## Returns:
     ##      A special matrix containing functions to get and set the matrix and 
-    ##      its inverse.
+    ##      its inverse matrix.
     
     m <- NULL
     
-    ## Function that sets the values of the matrix
+    ## Function that sets the values of the matrix in cached environment
     set <- function(y) {
         x <<- y
         m <<- NULL
@@ -71,13 +71,12 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## The following function computes the inverse of the matrix passed to 
-## makeCacheMatrix using the special matrix of functions returned from
-## makeCacheMatrix. If the inverse matrix has already been bound in the cached 
-## environment, cacheSolve retrieves the inverse from cache, skipping the 
-## computation.  Otherwise, if the inverse  matrix is unbound, cacheSolve 
-## calculates the inverse and binds it in the cached environment via the 
-## 'setinverse' function. 
+## The following function uses the special matrix of functions returned from
+## makeCacheMatrix to retrieve the inverse matrix. If the inverse matrix has
+## already been bound in the cached environment, cacheSolve retrieves the inverse 
+## from cache, skipping the computation.  Otherwise, if the inverse  matrix is 
+## unbound cacheSolve calculates the inverse matrix and binds it in the cached 
+## environment via the 'setinverse' function. 
 
 cacheSolve <- function(x, ...) {
     ## Args:
@@ -86,10 +85,10 @@ cacheSolve <- function(x, ...) {
     ## Returns: 
     ##      A matrix indicating the inverse of matrix 'x'.
     
-    ## Extract functions from the special matrix 'x' makeCacheMatrix returned
+    ## Extract functions from the special matrix 'x' returned from makeCacheMatrix
     special.list <- x[, 1]
     
-    ## Get the inverse matrix from cache.  If matrix is unbound, m is NULL
+    ## Get the inverse matrix from cache.  If matrix is unbound, 'm' is NULL
     m <- special.list$getinverse()
     
     ## If 'm' is bound in the cached environment, return the matrix from cache
@@ -101,12 +100,12 @@ cacheSolve <- function(x, ...) {
     ## Otherwise, 'm' is unbound. Retrieve the original matrix data using 'get'
     data <- special.list$get()
     
-    ## Calculate the inverse
+    ## Calculate the inverse matrix
     m <- solve(data, ...)
     
-    ## Bind the newly calculated matrix 'm' to the cached environment
+    ## Bind the newly created inverse matrix 'm' to the cached environment
     special.list$setinverse(m)
     
-    ## Return the matrix 'm'
+    ## Return the inverse matrix 'm'
     m
 }
